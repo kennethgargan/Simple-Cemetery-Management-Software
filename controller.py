@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from tkinter import END, W, commondialog
 from setuptools import Command
 from model import Model
@@ -92,11 +92,9 @@ class Controller:
         values = list(self.view.section_list_tree.item(selected,'values'))
 
         if input_name== "All" or input_name in self.model.get_section_names():
-            pass
-            ##messagebox.showerror("Error", "Duplicate Name.")
+            self.view.create_messagebox("Duplicate Section Name: Please enter a different name.")
         elif ' ' in input_name:
-            pass
-            ##messagebox.showerror("Error", "Section must not contain whitespace.")
+            self.view.create_messagebox("Section must not contain whitespace.")
         else:
             self.model.update_section_name(values[0],values[1],self.view.section_edit_entry.get())
             self.refresh_section()
@@ -126,8 +124,7 @@ class Controller:
             if len(self.model.query_plot(input_section,input_plot_number)) == 0:
                 check_plot = True
         else:
-            pass
-            ##messagebox.showerror("Error", "Plot Number must be a whole number.")
+            self.view.create_messagebox("Plot Number must be a whole number.")
         if check_plot == True and len(input_name) > 0:
             self.model.create_plot(input_name,input_section,input_plot_number)
             self.view.plot_tree.delete(*self.view.plot_tree.get_children())
@@ -137,8 +134,7 @@ class Controller:
             self.view.plot_add_entry_owner.delete(0,END)
             self.view.plot_add_entry_number.delete(0,END)
         else:
-            pass
-            #messagebox.showerror("Error", "Unable to create plot. Check Plot Owner has been entered.")
+            self.view.create_messagebox("Unable to create plot. Check Plot Owner has been entered.")
 
     def edit_plot(self):
         input_section = self.view.plot_edit_entry_section.get()
@@ -174,8 +170,7 @@ class Controller:
                 pass
                  #messagebox.showerror("Error", "Date Format Error: Make sure date is: YYYY-MM-DD. Example: 2010,12,20")
         else:
-            pass
-            #messagebox.showerror("Error", "All boxes must be filled.")
+            self.view.create_messagebox("Error", "All boxes must be filled.")
 
 
     def edit_deceased(self):
