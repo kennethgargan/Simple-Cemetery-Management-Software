@@ -163,7 +163,7 @@ class View:
         self.plot_add_label_plot.pack()
         self.plot_add_entry_number = Entry(self.plot_management_frame_add)
         self.plot_add_entry_number.pack()
-        self.plot_add_button = Button(self.plot_management_frame_add, text="Add")
+        self.plot_add_button = Button(self.plot_management_frame_add, text="Add", state="disabled")
         self.plot_add_button.pack()
         
         #Edit
@@ -233,3 +233,5 @@ class View:
         self.canvas= Canvas(self.middle_lower_ctr_right, width= 250, height=400)
         self.canvas.pack()
         
+    def create_messagebox(self,text):
+         messagebox.showerror(title="Error", message=text)

@@ -79,7 +79,7 @@ class Controller:
         valid_name = True
         for item in self.model.get_section_names():
             if input_name == item[1]:
-                print("Dupe name!")
+                self.view.create_messagebox("Duplicate Plot Name: Please enter a different name.")
                 valid_name = False
                 break
         if valid_name == True:
