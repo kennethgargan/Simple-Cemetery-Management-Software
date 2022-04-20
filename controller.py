@@ -25,7 +25,7 @@ class Controller:
         self.view.deceased_add_button.config(command=self.add_deceased)
         self.view.deceased_edit_button.config(command=self.edit_deceased)
 
-        self.display_section_names(self.model.get_section_names())
+        self.view.display_section_names(self.model.get_section_names())
 
     def section_click(self,event):
         self.view.deceased_add_button["state"] = "disabled"
@@ -49,7 +49,7 @@ class Controller:
 
             self.view.plot_tree.delete(*self.view.plot_tree.get_children())
             self.view.record_tree.delete(*self.view.record_tree.get_children())
-            self.display_plot_owners(self.model.query_plot_owners(values[1]))
+            self.view.display_plot_owners(self.model.query_plot_owners(values[1]))
             
             #Update the plot entry information
             self.view.plot_add_entry_section["state"] = "normal"
@@ -57,31 +57,19 @@ class Controller:
             self.view.plot_add_entry_section.insert(END,values[1])
             self.view.plot_add_entry_section["state"] = "disabled"
     
-    def display_section_names(self,items):
-        self.view.section_list_tree.insert(parent='',index='end',iid=0,text="Parent",values=("","All"))
-        for count, item in enumerate(items,start=1):
-            self.view.section_list_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0],item[1]))
-
-    def display_section_names(self,items):
-        self.view.section_list_tree.insert(parent='',index='end',iid=0,text="Parent",values=("","All"))
-        for count, item in enumerate(items,start=1):
-            self.view.section_list_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0],item[1]))
-
-    def display_plot_owners(self,items):
-        for count, item in enumerate(items):
-            self.view.plot_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0], item[1],item[2],item[3]))
-    def display_deceased_records(self,items):
-        for count, item in enumerate(items):
-            self.view.record_tree.insert(parent='',index='end',iid=count,text="Parent",values=item)
 
     def add_new_section(self):
         input_name = self.view.section_add_entry.get().capitalize()
         valid_name = True
-        for item in self.model.get_section_names():
-            if input_name == item[1]:
-                self.view.create_messagebox("Duplicate Plot Name: Please enter a different name.")
-                valid_name = False
-                break
+        if not input_name:
+            valid_name = False
+            self.view.create_messagebox("Can't have empty names.")
+        if valid_name == True:
+            for item in self.model.get_section_names():
+                if input_name == item[1]:
+                    self.view.create_messagebox("Duplicate Plot Name: Please enter a different name.")
+                    valid_name = False
+                    break
         if valid_name == True:
             self.model.create_section(input_name)
             self.refresh_section()
@@ -128,7 +116,7 @@ class Controller:
         if check_plot == True and len(input_name) > 0:
             self.model.create_plot(input_name,input_section,input_plot_number)
             self.view.plot_tree.delete(*self.view.plot_tree.get_children())
-            self.display_plot_owners(self.model.query_plot_owners(input_section))
+            self.view.display_plot_owners(self.model.query_plot_owners(input_section))
 
             #Clear the box after entered.
             self.view.plot_add_entry_owner.delete(0,END)
@@ -140,16 +128,17 @@ class Controller:
         input_section = self.view.plot_edit_entry_section.get()
         input_name = self.view.plot_edit_entry_owner.get()
         input_number = self.view.plot_edit_entry_number.get()
-
         selected = self.view.plot_tree.focus()
         values = self.view.plot_tree.item(selected,'values')
 
-        self.model.update_plot(values[0],input_name,input_section,input_number)
-        self.refresh_plots()
-        self.view.plot_edit_button["state"] = "disabled"
-
-        self.view.plot_edit_entry_owner.delete(0,END)
-        self.view.plot_edit_entry_number.delete(0,END)
+        if not self.model.query_plot(input_section,input_number):
+            self.model.update_plot(values[0],input_name,input_section,input_number)
+            self.refresh_plots()
+            self.view.plot_edit_button["state"] = "disabled"
+            self.view.plot_edit_entry_owner.delete(0,END)
+            self.view.plot_edit_entry_number.delete(0,END)
+        else:
+            self.view.create_messagebox("Plot with that Section & Number already exists.")
 
     def add_deceased(self):
         #Plot Information:
@@ -211,7 +200,7 @@ class Controller:
 
             self.view.plot_tree.delete(*self.view.plot_tree.get_children())
             self.view.record_tree.delete(*self.view.record_tree.get_children())
-            self.display_plot_owners(self.model.query_plot_owners(values[1]))
+            self.view.display_plot_owners(self.model.query_plot_owners(values[1]))
             
             #Update the plot entry information
             self.view.plot_add_entry_section["state"] = "normal"
@@ -243,7 +232,7 @@ class Controller:
             
             #Clear the input boxes.
             self.view.record_tree.delete(*self.view.record_tree.get_children())
-            self.display_deceased_records(self.model.query_deceased_by_id(values[0]))
+            self.view.display_deceased_records(self.model.query_deceased_by_id(values[0]))
 
         #self.load_image()
     
@@ -260,21 +249,21 @@ class Controller:
     
     def refresh_section(self):
         self.view.section_list_tree.delete(*self.view.section_list_tree.get_children())
-        self.display_section_names(self.model.get_section_names())
+        self.view.display_section_names(self.model.get_section_names())
     
     def refresh_plots(self):
         selected = self.view.section_list_tree.focus()
         values = list(self.view.section_list_tree.item(selected,'values'))
 
         self.view.plot_tree.delete(*self.view.plot_tree.get_children())
-        self.display_plot_owners(self.model.query_plot_owners(values[1]))
+        self.view.display_plot_owners(self.model.query_plot_owners(values[1]))
     
     def refresh_deceased(self):
         selected = self.view.plot_tree.focus()
         values = list(self.view.plot_tree.item(selected,'values'))
 
         self.view.record_tree.delete(*self.view.record_tree.get_children())
-        self.display_deceased_records(self.model.query_deceased_by_id(values[0]))
+        self.view.display_deceased_records(self.model.query_deceased_by_id(values[0]))
     
     def check_date(self,input_date):
         try:

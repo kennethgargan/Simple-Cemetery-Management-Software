@@ -232,6 +232,20 @@ class View:
 
         self.canvas= Canvas(self.middle_lower_ctr_right, width= 250, height=400)
         self.canvas.pack()
-        
+    
+    def display_section_names(self,items):
+        self.section_list_tree.insert(parent='',index='end',iid=0,text="Parent",values=("","All"))
+        for count, item in enumerate(items,start=1):
+            self.section_list_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0],item[1]))
+    def display_section_names(self,items):
+        self.section_list_tree.insert(parent='',index='end',iid=0,text="Parent",values=("","All"))
+        for count, item in enumerate(items,start=1):
+            self.section_list_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0],item[1]))
+    def display_plot_owners(self,items):
+        for count, item in enumerate(items):
+            self.plot_tree.insert(parent='',index='end',iid=count,text="Parent",values=(item[0], item[1],item[2],item[3]))
+    def display_deceased_records(self,items):
+        for count, item in enumerate(items):
+            self.record_tree.insert(parent='',index='end',iid=count,text="Parent",values=item)
     def create_messagebox(self,text):
          messagebox.showerror(title="Error", message=text)
