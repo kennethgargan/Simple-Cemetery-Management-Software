@@ -56,6 +56,7 @@ class Controller:
             self.view.plot_add_entry_section.delete(0,END)
             self.view.plot_add_entry_section.insert(END,values[1])
             self.view.plot_add_entry_section["state"] = "disabled"
+            self.view.deceased_add_entry_sname.delete(0,END)
     
 
     def add_new_section(self):
@@ -233,6 +234,7 @@ class Controller:
             #Clear the input boxes.
             self.view.record_tree.delete(*self.view.record_tree.get_children())
             self.view.display_deceased_records(self.model.query_deceased_by_id(values[0]))
+            self.view.deceased_add_entry_sname.delete(0,END)
 
         #self.load_image()
     
@@ -242,6 +244,9 @@ class Controller:
 
         if len(values) > 0:
             self.view.deceased_edit_entry_fname.delete(0,END)
+            self.view.deceased_edit_entry_sname.delete(0,END)
+            self.view.deceased_edit_entry_date.delete(0,END)
+
             self.view.deceased_edit_entry_fname.insert(END,values[2])
             self.view.deceased_edit_entry_sname.insert(END,values[3])
             self.view.deceased_edit_entry_date.insert(END,values[4])
@@ -267,6 +272,6 @@ class Controller:
     
     def check_date(self,input_date):
         try:
-            return bool(datetime.strptime(input_date, "%d/%m/%Y"))
+            return bool(datetime.strptime(input_date, "%Y/%m/%d"))
         except ValueError:
             return False
