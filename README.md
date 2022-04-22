@@ -5,8 +5,6 @@ A easy way to keep track of Cemetery plots.
 * [About](#about)
 * [Technologies](#technologies)
 * [Screenshots](#screenshots)
-* [How It Works](#how-it-works)
-* [Running The Code Yourself](#running-the-code-yourself)
 * [Thoughts on this project.](thoughts-on-this-project-&-what-i've-learned)
 
 ## About.
