@@ -15,6 +15,7 @@ While there is similar software out there, from what I can see, its paid. You ar
 ## Technologies. 
 ### Languages:
 Python 3.10+
+
 SQL / SQLite
 
 # Screenshots.
